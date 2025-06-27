@@ -1,0 +1,16 @@
+services:
+  backend:
+    build:
+      context: ./pentaSecurity_back
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    container_name: backend-app
+
+  frontend:
+    build:
+      context: ./pentaSecurity_front
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    container_name: frontend-app
