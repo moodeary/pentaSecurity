@@ -1,0 +1,10 @@
+@import './base.css';
+@import 'tailwindcss';
+
+@theme {
+  --color-brand-teal: #4db6ac;
+  --color-brand-pink: #f06292;
+  --color-brand-purple: #9575cd;
+  --color-brand-green: #66bb6a;
+  --color-brand-red: #e57373;
+}
