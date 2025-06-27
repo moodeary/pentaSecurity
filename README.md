@@ -7,7 +7,6 @@
 실행 명령어 : docker-compose up --build -d
 종료 명령어 : docker-compose down
 
-### Docker로 전체 시스템 실행
 실행 후 브라우저에서 `http://localhost:3000`으로 접속하세요.
 
 ## 🛠 기술 스택
@@ -68,7 +67,7 @@
 | **Method** | POST                                  |
 | **Body**   | `title`, `content`, `author`         |
 
-### 핵심 기능 요약
+## 핵심 기능 요약
 1. **전략 패턴 구현**
    - `loadPostsByStrategy()` 메서드에서 전략 실행
    - `strategy` 값으로 무한스크롤/페이징 선택
