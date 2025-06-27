@@ -32,23 +32,6 @@
 - **JUnit 5** - 단위 테스트 및 통합 테스트 프레임워크
 
 
-## 🏗 전략패턴 설계
-
-- `LoadStrategy` 인터페이스 정의
-- 무한스크롤 전략 (`InfiniteScrollStrategy`)
-- 페이징 전략 (`PaginationStrategy`)
-
-
-## 🎯 주요 기능
-
-- ✅ **게시글 목록 조회** - RESTful API 기반 데이터 로딩
-- ✅ **전략 선택 UI** - 토글을 통한 로딩 방식 변경
-- ✅ **무한스크롤** - 스크롤 기반 동적 로딩
-- ✅ **페이징** - 페이지 기반 데이터 로딩
-- ✅ **반응형 디자인** - Quasar + Tailwind CSS 활용
-- ✅ **예외 처리** - Spring Validation 및 에러 핸들링
-
-
 
 ## 🌐 API 명세
 
@@ -66,6 +49,24 @@
 | **Endpoint** | `/api/posts`                          |
 | **Method** | POST                                  |
 | **Body**   | `title`, `content`, `author`         |
+
+
+## 🏗 전략패턴 설계
+
+- `LoadStrategy` 인터페이스 정의
+- 무한스크롤 전략 (`InfiniteScrollStrategy`)
+- 페이징 전략 (`PaginationStrategy`)
+
+
+## 🎯 주요 기능
+
+- ✅ **게시글 목록 조회** - RESTful API 기반 데이터 로딩
+- ✅ **전략 선택 UI** - 토글을 통한 로딩 방식 변경
+- ✅ **무한스크롤** - 스크롤 기반 동적 로딩
+- ✅ **페이징** - 페이지 기반 데이터 로딩
+- ✅ **반응형 디자인** - Quasar + Tailwind CSS 활용
+- ✅ **예외 처리** - Spring Validation 및 에러 핸들링
+
 
 ## 핵심 기능 요약
 1. **전략 패턴 구현**
