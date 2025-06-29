@@ -10,8 +10,6 @@ import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-
 @Service("infinite")
 public class InfiniteLoadStrategy implements LoadStrategy{
     @Override

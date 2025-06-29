@@ -12,17 +12,11 @@ export const sideMenu = [
       {
         type: 'expansion',
         icon: 'celebration',
-        label: '무한스크롤',
-        key: 'scroll',
-        to: '/scroll',
+        label: '페이징 & 무한스크롤',
+        key: 'home',
+        to: '/',
       },
-      {
-        type: 'expansion',
-        icon: 'emoji_events',
-        label: '페이징',
-        key: 'page',
-        to: '/page',
-      },
+
     ],
   },
 ]

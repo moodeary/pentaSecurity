@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import AdminLayout from '@/layouts/AdminLayout.vue'
-import PagePostView from '@/views/PagePostView.vue'
-import ScrollPostView from '@/views/ScrollPostView.vue'
+import HomeView from '@/views/HomeView.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,9 +9,7 @@ const router = createRouter({
       path: '/',
       component: AdminLayout,
       children: [
-        { path: '', name: 'PagePostView', component: PagePostView },
-        { path: '/page', name: 'PagePostView', component: PagePostView },
-        { path: '/scroll', name: 'ScrollPostView', component: ScrollPostView },
+        { path: '/', name: 'HomeView', component: HomeView },
       ],
     },
   ],

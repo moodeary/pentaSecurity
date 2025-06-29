@@ -1,7 +1,7 @@
 <!-- eslint-disable vue/require-v-for-key -->
 <template>
   <q-card
-    class="w-[605px] min-w-[605px] px-8 pb-8 pt-4 border-l-8 border-brand-purple shadow-lg !rounded-2xl"
+    class="w-[450px] min-w-[450px] px-8 pb-8 pt-4 border-l-8 border-brand-purple shadow-lg !rounded-2xl"
   >
     <q-card-section class="text-center text-[27px] text-bold text-gray-600"> 새 글</q-card-section>
     <q-btn

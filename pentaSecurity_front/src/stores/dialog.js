@@ -6,6 +6,7 @@ export const useDialogStore = defineStore('dialog', {
     link: 'celebration',
     isNewPost: false,
     isConfirm: false,
+    isSelectPost: false,
   }),
 
   getters: {},
@@ -33,6 +34,14 @@ export const useDialogStore = defineStore('dialog', {
 
     offConfirm() {
       this.isConfirm = false
+    },
+
+    onSelectPost() {
+      this.isSelectPost = true
+    },
+
+    offSelectPost() {
+      this.isSelectPost = false
     },
   },
 })

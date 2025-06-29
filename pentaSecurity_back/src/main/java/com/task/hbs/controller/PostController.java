@@ -33,4 +33,11 @@ public class PostController {
         return ApiResponse.success(posts, "게시글 목록 조회 SUCCESS");
 
     }
+
+    @DeleteMapping("/{id}")
+    public ApiResponse<?> deletePost(@PathVariable Long id) {
+        postService.delete(id);
+        return ApiResponse.success(null, "게시글 삭제 성공");
+    }
+
 }

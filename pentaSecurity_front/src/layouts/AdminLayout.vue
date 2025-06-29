@@ -22,6 +22,10 @@
     <q-dialog v-model="dialogStore.isNewPost">
       <new-post />
     </q-dialog>
+
+    <q-dialog v-model="dialogStore.isSelectPost">
+      <select-post />
+    </q-dialog>
   </q-layout>
 </template>
 
@@ -30,6 +34,7 @@ import HeaderComponent from '@/components/Layout/HeaderBar.vue'
 import SideBarComponent from '@/components/Layout/SideBar.vue'
 import FooterLayout from '@/components/Layout/FooterBar.vue'
 import NewPost from '@/components/popup/NewPost.vue'
+import SelectPost from '@/components/popup/SelectPost.vue'
 
 import { useDialogStore } from '@/stores/dialog.js'
 const dialogStore = useDialogStore()

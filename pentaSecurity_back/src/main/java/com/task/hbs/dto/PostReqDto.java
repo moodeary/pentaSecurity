@@ -16,6 +16,8 @@ import lombok.*;
 @Builder
 public class PostReqDto {
 
+    private Long id;
+
     @NotBlank(message = "제목은 필수입니다.")
     @Size(max = 100, message = "제목은 100자 이내로 입력하세요.")
     private String title;
@@ -28,6 +30,7 @@ public class PostReqDto {
 
     public Post toEntity() {
         return Post.builder()
+                .id(this.id)
                 .title(this.title)
                 .content(this.content)
                 .author(this.author)

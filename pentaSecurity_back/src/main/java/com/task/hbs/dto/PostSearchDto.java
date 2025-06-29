@@ -9,7 +9,7 @@ public class PostSearchDto {
 
     private String keyword = "";
     private String sortBy = "createdAt";
-    private String sortDir = "desc";
+    private String sortDir = "ASC";
     private int page = 0;
     private int size = 10;
 }

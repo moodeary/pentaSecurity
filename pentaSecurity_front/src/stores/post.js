@@ -1,7 +1,7 @@
 import { defineStore } from 'pinia'
 import { apiAxios } from '@/axios/apiAxios.js'
 import { useQuasar } from 'quasar'
-import { reactive, computed } from 'vue'
+import { reactive, computed, ref } from 'vue'
 
 export const usePostStore = defineStore('post', () => {
   const $q = useQuasar()
@@ -10,27 +10,41 @@ export const usePostStore = defineStore('post', () => {
   const infinite = reactive({
     posts: [],
     page: 0,
-    size: 10,
+    size: 15,
     hasMore: true,
   })
+    // 로딩 상태 추가
+  const loading = ref(false)
 
   // 페이지네이션 상태
-  const pagination = reactive({
+  const pagination = ref({
     posts: [],
-    currentPage: 0, // 0-based
-    totalPages: 0,
-    size: 10,
-    totalElements: 0,
+    descending: false,
+    sortBy: null,
+    rowsPerPage: 50,
+    page: 1,
+    rowsNumber: 0,
   })
 
-  // 무한스크롤 Getter
+  const selectPost = ref({})
+
+  // Getters for computed properties
   const getInfinitePosts = computed(() => infinite.posts)
+  const getPaginationPosts = computed(() => pagination.value.posts)
+  const isLoading = computed(() => loading.value)
+  const hasMorePosts = computed(() => infinite.hasMore)
+  const paginations = computed(() => pagination.value)
+  const getSelectPost = computed(() => selectPost.value)
 
-  // 페이지네이션 Getter
-  const getPaginationPosts = computed(() => pagination.posts)
 
-  // 무한스크롤 데이터 불러오기
-  const fetchInfinitePosts = async () => {
+  const setSelectPost = (post) => {
+    selectPost.value = post
+  }
+
+  // Action to fetch initial infinite scroll posts
+  const fetchInfinitePosts = async (searchTerm) => {
+    loading.value = true
+    await new Promise(resolve => setTimeout(resolve, 1000))
     if (!infinite.hasMore) return
 
     try {
@@ -39,82 +53,171 @@ export const usePostStore = defineStore('post', () => {
           page: infinite.page,
           size: infinite.size,
           strategy: 'infinite',
+          keyword: searchTerm,
         },
       })
 
       const data = res.data.data
+      loading.value = false
       infinite.posts.push(...data.content)
       infinite.hasMore = !data.last
       infinite.page += 1
     } catch (e) {
       $q.notify({
-        type: 'negative',
         message: e.response?.data?.message || '무한스크롤 데이터 불러오기 실패',
-        position: 'top',
+        type: 'negative',
+        color: 'deep-purple-4',
+        position: 'bottom',
+        timeout: 2000,
+        actions: [{ label: '닫기', color: 'white', handler: () => {} }],
       })
+    } finally {
+      loading.value = false
     }
   }
 
-  // 무한스크롤 상태 초기화
-  const resetInfinite = () => {
+  const resetInfinitePosts = () => {
     infinite.posts = []
     infinite.page = 0
     infinite.hasMore = true
   }
 
-  // 페이지네이션 데이터 불러오기
-  const fetchPaginationPosts = async (page = pagination.currentPage) => {
-    try {
-      const res = await apiAxios.get('/posts', {
-        params: {
-          page,
-          size: pagination.size,
-          strategy: 'paging',
-        },
-      })
+  // page네이션 상태 초기화
+  const resetPagination = () => {
+    pagination.value.posts = []
+    pagination.value.page = 1
+    pagination.value.rowsNumber = 0
+    pagination.value.totalPages = 0
+    pagination.value.sortBy = null
+    pagination.value.descending = false
+  }
 
-      const data = res.data.data
-      pagination.posts = data.content
-      pagination.totalPages = data.totalPages
-      pagination.currentPage = page
-      pagination.totalElements = data.totalElements || data.totalPages * pagination.size
+  // Action to fetch pagination posts
+  // getPage: { page, rowsPerPage, sortBy, descending }
+  // searchTerm: 검색어
+  const fetchPaginationPosts = async (getPage, searchTerm) => {
+    loading.value = true;
+    try {
+      const params = {
+        strategy: 'paging',
+        page: getPage.page - 1, // Spring Data는 0부터 시작
+        size: getPage.rowsPerPage,
+        sortBy: getPage.sortBy || 'id',
+        sortDir: getPage.descending ? 'DESC' : 'ASC',
+        keyword: searchTerm,
+      };
+
+      const res = await apiAxios.get('/posts', { params });
+      const data = res.data.data;
+
+      // 데이터 갱신
+      pagination.value.posts = data.content;
+      pagination.value.totalPages = data.totalPages;
+      pagination.value.rowsNumber = data.totalElements; // Q-Table의 rowsNumber에 맞춤
+      pagination.value.currentPage = pagination.value.page; // 혹은 필요시 data.pageable.pageNumber + 1
+      pagination.value.rowsNumber = data.totalElements; // Q-Table의 rowsNumber에 맞춤
+
+
     } catch (e) {
       $q.notify({
-        type: 'negative',
         message: e.response?.data?.message || '페이지네이션 데이터 불러오기 실패',
-        position: 'top',
+        type: 'negative',
+        color: 'deep-purple-4',
+        position: 'bottom',
+        timeout: 2000,
+        actions: [{ label: '닫기', color: 'white', handler: () => {} }],
       })
+    } finally {
+      loading.value = false
     }
   }
 
-  // 게시글 생성
+  // Create a new post
   const createPost = async (postData) => {
     try {
       const res = await apiAxios.post('/posts', postData)
       $q.notify({
         type: 'positive',
         message: res.data.message || '게시글이 등록되었습니다!',
-        position: 'top',
+        color: 'deep-purple-4',
+        position: 'bottom',
+        timeout: 2000,
+        actions: [{ label: '닫기', color: 'white', handler: () => {} }],
       })
+
+      resetPagination()
+      resetInfinitePosts() // Reset infinite scroll state
+
+      await fetchInfinitePosts() // Fetch updated posts after deletion
+      await fetchPaginationPosts(pagination.value, '') // Fetch updated pagination posts
+
+
       return res
     } catch (e) {
       $q.notify({
         type: 'negative',
         message: e.response?.data?.message || '게시글 등록에 실패했습니다.',
-        position: 'top',
+        color: 'deep-purple-4',
+        position: 'bottom',
+        timeout: 2000,
+        actions: [{ label: '닫기', color: 'white', handler: () => {} }],
       })
       throw e
     }
   }
 
+  // http://localhost:8080/api/posts/1  <=-- delete method id값 받아서
+
+  const deletePost = async (postId) => {
+    try {
+      const res = await apiAxios.delete(`/posts/${postId}`)
+      $q.notify({
+        type: 'positive',
+        message: res.data.message || '게시글이 삭제되었습니다!',
+        color: 'deep-purple-4',
+        position: 'bottom',
+        timeout: 2000,
+        actions: [{ label: '닫기', color: 'white', handler: () => {} }],
+      })
+
+      resetPagination()
+      resetInfinitePosts() // Reset infinite scroll state
+
+      await fetchInfinitePosts() // Fetch updated posts after deletion
+      await fetchPaginationPosts(pagination.value, '') // Fetch updated pagination posts
+
+      return res
+
+    } catch (e) {
+      $q.notify({
+        type: 'negative',
+        message: e.response?.data?.message || '게시글 삭제에 실패했습니다.',
+        color: 'deep-purple-4',
+        position: 'bottom',
+        timeout: 2000,
+        actions: [{ label: '닫기', color: 'white', handler: () => {} }],
+      })
+      throw e
+    }
+  }
+
+
   return {
+    loading,
+    isLoading,
+    hasMorePosts,
     infinite,
+    paginations,
     pagination,
     getInfinitePosts,
     getPaginationPosts,
+    getSelectPost,
     fetchInfinitePosts,
-    resetInfinite,
     fetchPaginationPosts,
     createPost,
+    resetInfinitePosts,
+    resetPagination,
+    setSelectPost,
+    deletePost
   }
 })
