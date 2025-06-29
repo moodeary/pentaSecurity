@@ -78,7 +78,7 @@ const beforeDelete = () => {
 
 const onConfirm = async () => {
   if (actionType.value === 'update') {
-    await postStore.updatePost(postInfo.value)
+    await postStore.updatePost(postInfo.value.id, postInfo.value)
   } else if (actionType.value === 'delete') {
     await postStore.deletePost(postInfo.value.id)
   }

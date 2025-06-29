@@ -24,6 +24,15 @@ public class PostController {
         return ApiResponse.success(newPost, "게시글 생성 성공");
     }
 
+    @PutMapping("/{id}")
+    public ApiResponse<PostResDto> updatePost(
+            @PathVariable Long id,               // URL에서 id 추출
+            @RequestBody @Valid PostReqDto dto   // Body에서 JSON 파싱
+    ) {
+        PostResDto updated = postService.update(id, dto);
+        return ApiResponse.success(updated, "게시글 수정 성공");
+    }
+
     @GetMapping
     public ApiResponse<?> getPosts(@RequestParam String strategy, PostSearchDto condition) {
 

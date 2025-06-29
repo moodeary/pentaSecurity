@@ -166,10 +166,10 @@ export const usePostStore = defineStore('post', () => {
     }
   }
 
-  // Create a new post
-  const updatePost = async (postData) => {
+  // update a post using PUT request
+  const updatePost = async (id, postData) => {
     try {
-      const res = await apiAxios.post('/posts', postData)
+      const res = await apiAxios.put(`/posts/${id}`, postData)
       $q.notify({
         type: 'positive',
         message: res.data.message || '게시글이 수정되었습니다!',
@@ -182,9 +182,8 @@ export const usePostStore = defineStore('post', () => {
       resetPagination()
       resetInfinitePosts() // Reset infinite scroll state
 
-      await fetchInfinitePosts() // Fetch updated posts after deletion
+      await fetchInfinitePosts() // Fetch updated posts after update
       await fetchPaginationPosts(pagination.value, '') // Fetch updated pagination posts
-
 
       return res
     } catch (e) {

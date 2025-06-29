@@ -39,4 +39,17 @@ public class PostService {
                 .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + id));
         postRepository.delete(post);
     }
+
+    @Transactional
+    public PostResDto update(Long id, PostReqDto dto) {
+        Post post = postRepository.findById(id)
+                .orElseThrow(() -> new PostNotFoundException("Post not found with id: " + id));
+        // 필요한 필드만 수정 (전체 수정)
+        post.setTitle(dto.getTitle());
+        post.setContent(dto.getContent());
+        post.setAuthor(dto.getAuthor());
+
+        // JPA의 Dirty Checking으로 자동 업데이트
+        return PostResDto.fromEntity(post);
+    }
 }
