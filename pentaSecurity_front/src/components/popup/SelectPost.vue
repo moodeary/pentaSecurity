@@ -16,7 +16,7 @@
       <q-input v-model="postInfo.author" color="deep-purple-4" label="작성자" outlined dense required stack-label class="q-mb-md" />
 
       <div class="flex justify-end">
-        <q-btn @click="beforeDelete" label="삭제" color="red-4" />
+        <q-btn @click="beforeDelete" label="삭제" color="purple-4" />
 
         <q-space />
         <q-btn v-close-popup label="닫기" color="white" text-color="purple-4" class="px-8 !mr-4" />
@@ -78,10 +78,10 @@ const beforeDelete = () => {
 
 const onConfirm = async () => {
   if (actionType.value === 'update') {
-    await postStore.createPost(postInfo.value)
+    await postStore.updatePost(postInfo.value)
   } else if (actionType.value === 'delete') {
     await postStore.deletePost(postInfo.value.id)
   }
-  dialogStore.offNewPost()
+  dialogStore.offSelectPost()
 }
 </script>

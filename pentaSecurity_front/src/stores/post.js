@@ -166,6 +166,40 @@ export const usePostStore = defineStore('post', () => {
     }
   }
 
+  // Create a new post
+  const updatePost = async (postData) => {
+    try {
+      const res = await apiAxios.post('/posts', postData)
+      $q.notify({
+        type: 'positive',
+        message: res.data.message || '게시글이 수정되었습니다!',
+        color: 'deep-purple-4',
+        position: 'bottom',
+        timeout: 2000,
+        actions: [{ label: '닫기', color: 'white', handler: () => {} }],
+      })
+
+      resetPagination()
+      resetInfinitePosts() // Reset infinite scroll state
+
+      await fetchInfinitePosts() // Fetch updated posts after deletion
+      await fetchPaginationPosts(pagination.value, '') // Fetch updated pagination posts
+
+
+      return res
+    } catch (e) {
+      $q.notify({
+        type: 'negative',
+        message: e.response?.data?.message || '게시글 수정에 실패했습니다.',
+        color: 'deep-purple-4',
+        position: 'bottom',
+        timeout: 2000,
+        actions: [{ label: '닫기', color: 'white', handler: () => {} }],
+      })
+      throw e
+    }
+  }
+
   // http://localhost:8080/api/posts/1  <=-- delete method id값 받아서
 
   const deletePost = async (postId) => {
@@ -215,6 +249,7 @@ export const usePostStore = defineStore('post', () => {
     fetchInfinitePosts,
     fetchPaginationPosts,
     createPost,
+    updatePost,
     resetInfinitePosts,
     resetPagination,
     setSelectPost,
