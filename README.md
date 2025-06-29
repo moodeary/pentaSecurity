@@ -10,6 +10,11 @@
 
 실행 후 브라우저에서 `http://localhost:3000`으로 접속하세요.
 
+
+h2 서버에 접속 : http://localhost:8080/h2-console
+
+h2 속성 JDBC URL : `jdbc:h2:mem:test` 로 접속하세요.
+   
 ## 🛠 기술 스택
 
 ### 🎨 Frontend
